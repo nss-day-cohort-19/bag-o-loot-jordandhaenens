@@ -50,7 +50,30 @@ namespace BagOLoot
 
         public List<string> GetChildren ()
         {
-            return new List<string>();
+            using (_connection)
+            {
+                _connection.Open();
+                SqliteCommand dbcmd = _connection.CreateCommand();
+
+                // Select the id and name of every child
+                dbcmd.CommandText = "select id, name from child";
+
+                using (SqliteDataReader dr = dbcmd.ExecuteReader())
+                {
+                    //read each row in the resultset from db
+                    while (dr.Read())
+                    {
+                        //add child name to the list
+                        _children.Add(dr[1].ToString());
+                    }
+                }
+
+                //clean up
+                dbcmd.Dispose();
+                _connection.Close();
+            }
+            
+            return _children;
         }
 
         public string GetChild (string name)
