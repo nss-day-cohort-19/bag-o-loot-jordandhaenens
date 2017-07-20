@@ -17,7 +17,7 @@ namespace BagOLoot
             _connection = new SqliteConnection(_connectionString);
         }
 
-        public void Check ()
+        public void CheckForChildTable ()
         {
             using (_connection)
             {
@@ -42,9 +42,9 @@ namespace BagOLoot
                     if (ex.Message.Contains("no such table"))
                     {
                         dbcmd.CommandText = $@"create table child (
-                            `id`	integer NOT NULL PRIMARY KEY AUTOINCREMENT,
-                            `name`	varchar(80) not null, 
-                            `delivered` integer not null default 0
+                            `ChildID`	integer NOT NULL PRIMARY KEY AUTOINCREMENT,
+                            `ChildName`	varchar(80) not null, 
+                            `Delivered` integer not null default 0
                         )";
                         dbcmd.ExecuteNonQuery ();
                         dbcmd.Dispose ();
@@ -53,5 +53,44 @@ namespace BagOLoot
                 _connection.Close ();
             }
         }
+
+        public void CheckForToyTable ()
+        {
+            using (_connection)
+            {
+                _connection.Open();
+                SqliteCommand dbcmd = _connection.CreateCommand ();
+
+                // Query the child table to see if table is created
+                dbcmd.CommandText = $"select id from toy";
+
+                try
+                {
+                    // Try to run the query. If it throws an exception, create the table
+                    using (SqliteDataReader reader = dbcmd.ExecuteReader())
+                    {
+                        
+                    }
+                    dbcmd.Dispose ();
+                }
+                catch (Microsoft.Data.Sqlite.SqliteException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    if (ex.Message.Contains("no such table"))
+                    {
+                        dbcmd.CommandText = $@"create table toy (
+                            `ToyID`	integer NOT NULL PRIMARY KEY AUTOINCREMENT,
+                            `ToyName`	varchar(80) not null, 
+                            `ChildID` integer not null,
+                            FOREIGN KEY(`ChildID`) REFERENCES `child`(`ChildID`)
+                        )";
+                        dbcmd.ExecuteNonQuery ();
+                        dbcmd.Dispose ();
+                    }
+                }
+                _connection.Close ();
+            }
+        }
+
     }
 }

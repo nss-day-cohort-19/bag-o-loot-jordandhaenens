@@ -19,9 +19,11 @@ namespace BagOLoot.Tests
         //Given
             string toyName = "Skateboard";
             int childID = 715;
+            //Add toy and childID to Toy table 
             int toyID = _helper.AddToyToBag(childID, toyName);
+            //Check Toy Table for all toys associated with childID
             List<int> toys = _helper.GetChildsToys(childID);
-        //When
+    
             Assert.Contains(toyID, toys);
         //Then
         }
