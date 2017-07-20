@@ -17,7 +17,7 @@ namespace BagOLoot
         {
              _connection = new SqliteConnection(_connectionString);
         }
-        public int AddToyToBag(int ChildID, string toyName)
+        public bool AddToyToBag(int ChildID, string toyName)
         {
             using (_connection)
             {
@@ -25,7 +25,7 @@ namespace BagOLoot
                 SqliteCommand dbcmd = _connection.CreateCommand();
 
                 //Insert new toy to toyTable
-                dbcmd.CommandText = $"insert into toy values (null, {toyName}, {ChildID})";
+                dbcmd.CommandText = $"insert into toy values (null, '{toyName}', {ChildID})";
                 Console.WriteLine(dbcmd.CommandText);
                 dbcmd.ExecuteNonQuery();
 
@@ -43,7 +43,7 @@ namespace BagOLoot
                 _connection.Close();
             }
 
-            return _lastID ;
+            return _lastID != 0;
         }
 
         public List<int> RemoveChildsToy(int child, int toy)
