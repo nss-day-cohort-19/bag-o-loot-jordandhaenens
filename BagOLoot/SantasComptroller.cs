@@ -42,9 +42,14 @@ namespace BagOLoot
             return _toyBag;
         }
 
-        public bool DeliveryComplete(int childID) 
+        public void SetDeliveryStatus(int childID, string delivered) 
         {
-            return true;
+            
+        }
+
+        public List<Child> GetDeliveredChildren()
+        {
+            return new List<Child>() { new Child(2, "jamal", 1) };
         }
     }
 

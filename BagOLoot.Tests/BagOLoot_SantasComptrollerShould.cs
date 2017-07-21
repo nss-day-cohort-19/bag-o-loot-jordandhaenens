@@ -21,6 +21,14 @@ namespace BagOLoot.Tests
         }
 
         [Fact]
+        public void SetChildsDeliveryStatus()
+        {
+            int ChildID = 1;
+            _comptroller.SetDeliveryStatus(ChildID);
+            List<Child> delivered = _comptroller.GetDeliveredChildren();
+        }
+
+        [Fact]
         public void GetListOfAChildsToys()
         {
             int childID = 1;
