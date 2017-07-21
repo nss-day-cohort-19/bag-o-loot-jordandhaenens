@@ -7,14 +7,39 @@ namespace BagOLoot
 {
     public class SantasComptroller
     {
+        private SqliteConnection _connection;
+        private string _connectionString = $"Data Source={Environment.GetEnvironmentVariable("BAGOLOOT_DB")}";
+        private List<Toy> _toyBag = new List<Toy>();
+
+        public SantasComptroller()
+        {
+             _connection = new SqliteConnection(_connectionString);
+        }
+
         public List<int> GetGoodKids()
         {
             return new List<int> () { 712, 432, 543, 124 };
         }
 
-        public List<int> GetChildsToys(int childID)
+        public List<Toy> GetChildsToys(int childID)
         {
-            return new List<int> () { 1, 2, 3, 4, 5, 6 };
+            using ( _connection )
+            {
+                _connection.Open();
+                SqliteCommand dbcmd = _connection.CreateCommand();
+                
+                //Get list of toys for childID
+                dbcmd.CommandText = $"SELECT ToyID, ToyName, ChildID FROM toy WHERE ChildID = {childID}";
+                using ( SqliteDataReader dr = dbcmd.ExecuteReader() )
+                {
+                    while ( dr.Read() )
+                    {
+                        _toyBag.Add( new Toy(dr.GetInt32(0), dr[1].ToString(), dr.GetInt32(2)) );
+                    }
+                }
+
+            }
+            return _toyBag;
         }
 
         public bool DeliveryComplete(int childID) 

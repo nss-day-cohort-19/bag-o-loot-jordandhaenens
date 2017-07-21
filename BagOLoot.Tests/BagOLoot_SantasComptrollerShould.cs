@@ -23,10 +23,10 @@ namespace BagOLoot.Tests
         [Fact]
         public void GetListOfAChildsToys()
         {
-            int childID = 312;
-            List<int> toys = _comptroller.GetChildsToys(childID);
+            int childID = 1;
+            List<Toy> toys = _comptroller.GetChildsToys(childID);
 
-            Assert.IsType<List<int>>(toys);
+            Assert.IsType<List<Toy>>(toys);
         }
 
         [Fact]

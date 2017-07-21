@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Xunit;
+using System.Linq;
 
 namespace BagOLoot.Tests
 {
@@ -8,9 +9,11 @@ namespace BagOLoot.Tests
     public class SantaHelperShould
     {
         SantaHelper _helper;
+        SantasComptroller _comptroller;
         public SantaHelperShould()
         {
             _helper = new SantaHelper();
+            _comptroller = new SantasComptroller();
         }
 
         [Fact]
@@ -21,7 +24,6 @@ namespace BagOLoot.Tests
             int childID = 1;
             //Add toy and childID to Toy table 
             bool toyID = _helper.AddToyToBag(childID, toyName);
-            // List<int> toys = _helper.GetChildsToys(childID);
     
             Assert.True(toyID);
         //Then
@@ -30,12 +32,12 @@ namespace BagOLoot.Tests
         [Fact]
         public void RemoveToyFromChildsBag()
         {
-            int toyID = 1;
+            int toyID = 2;
             int childID = 1;
-            _helper.RemoveChildsToy(1, 1);
-            List<int> toys = _helper.GetChildsToys(childID);
+            _helper.RemoveChildsToy(1, 2);
+            List<Toy> toys = _comptroller.GetChildsToys(childID);
 
-            Assert.DoesNotContain(toyID, toys);
+            Assert.DoesNotContain<Toy>(toys.Find(n => n.ToyID == toyID), toys);
         }
 
     }
